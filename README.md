@@ -8,12 +8,11 @@ Here we used the predicted 3D structure of compounds by adopting [Diffdock](http
 
 
 
-**
-Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
+**Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
 ~~~
 python generate_graph_for_protein.py  
 ~~~
-**Run generate data for turning compounds and proteins into 3D graph.** <br /> 
+**Run generate data for turning compounds and proteins into 3D graphs.** <br /> 
 ~~~
 python generate_pt_dataset.py 
 ~~~
