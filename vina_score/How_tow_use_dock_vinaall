@@ -1,0 +1,17 @@
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_0.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_1.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_2.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_3.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_4.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_5.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score' 
+
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_0.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_1.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_2.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_3.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_4.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_5.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+python vina_function_rerank.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/biolip2_slpit/split_6.csv' '/ssd1/quang/moldock/DiffDock/results/biolip2_score' 
+
+
+python vina_function_rerank_regu.py '/ssd1/quang/moldock/Benchmark_data/for_equi/for_diff_encode/bindingdb_split/split_0.csv' '/ssd1/quang/moldock/DiffDock/results/bindingdb_score'
