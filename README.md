@@ -15,7 +15,7 @@ python generate_graph_for_protein.py
 ~~~
 **Run generate data for turning compounds and proteins into 3D graph.** <br /> 
 ~~~
-python gen_dataset.py 
+python generate_pt_dataset.py 
 ~~~
 Run training the model. <br /> 
 ~~~
