@@ -19,5 +19,5 @@ python gen_dataset.py
 ~~~
 Run training the model. <br /> 
 ~~~
-CUDA_VISIBLE_DEVICES=4,5,6,7 python cpi_e3nn_hete_fortraining_processed_protDDP.py 
+CUDA_VISIBLE_DEVICES=4,5,6,7 train.py 
 ~~~
