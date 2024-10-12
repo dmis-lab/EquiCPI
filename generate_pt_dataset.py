@@ -10,7 +10,6 @@ def data_making_path(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/
     data_comps = []
     data_prots = []
     data_labels = []
-
     for complex_name in tqdm(os.listdir(dataset_folder)):
         complex_dir = os.path.join(dataset_folder,complex_name)
         if len(os.listdir(complex_dir))>=3:
@@ -33,6 +32,7 @@ def data_making_path(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/
     df = pd.DataFrame({'complex_name':data_complex_name,'ligand':data_comps,'receptor':data_prots,'label':data_labels})
     df.to_csv(data_name)
     return data_name
+
 def data_making_path_or_diffdock(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/ssd1/quang/moldock/DiffDock/results/bindingdb_score_temp/rerank'):
     data_complex_name=[]
     data_comps = []
@@ -64,6 +64,7 @@ def data_making_path_or_diffdock(data_name= 'bindingdb_diff_rerank.csv', dataset
     df = pd.DataFrame({'complex_name':data_complex_name,'ligand':data_comps,'receptor':data_prots,'label':data_labels})
     df.to_csv(data_name)
     return data_name
+
 def data_making_path_or_diffdock_classification(data_name, dataset_folder):
     csv_dataset = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esmDUDEdiverse_data.csv'
     df_csv_dataset = pd.read_csv(csv_dataset)
@@ -120,7 +121,14 @@ def main(task, dataset_name, data_name_csv):
 
 
 if __name__ == '__main__':
-    task = 'classification'
-    dataset_name = 'dude_classification'
-    data_name_csv = 'dude_classification_or1.csv'
+    # ML task
+    task = str(sys.argv[1])
+    # dataset name 
+    dataset_name = str(sys.argv[2])
+    # csv file name (to compare overlap, some interactions can not be predicted)
+    data_name_csv = str(sys.argv[3])
+
+    # task = 'classification'
+    # dataset_name = 'dude_classification'
+    # data_name_csv = 'dude_classification_or1.csv'
     main(task, dataset_name, data_name_csv)

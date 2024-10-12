@@ -5,33 +5,31 @@ import os
 from tqdm import tqdm
 import torch
 from torch_geometric.data import Dataset, HeteroData
-from get_infor_sdf import get_ligand_graph, read_molecule
+from common.get_infor_sdf import get_ligand_graph, read_molecule
 
 import os
 
 class CPI3DDataset(Dataset):
-    def __init__(self, df, data_name, 
-                 processed_dir_data, 
+    def __init__(self, df = None, data_name = None, 
+                 processed_dir_data = None, 
                  protein_pt='/ssd1/quang/moldock/e3nn_cpi_project/processed/bindingDB_prot/bindingDB_prot.pt',
-                 test=False):
-        """
-        root = Where the dataset should be stored. This folder is split
-        into raw_dir (downloaded dataset) and processed_dir (processed data). 
-        """
+                 test = False,
+                 processed_data_pt = None):
         super(CPI3DDataset, self).__init__()
-        # self.dataset_file = filename
-        self.data = df.reset_index(drop=True) 
-        self.processed_dir_data = processed_dir_data
-        self.test = test
-        self.data_name = data_name
-        self.pt_file_name = 'data_{}.pt'.format(self.data_name)
-        self.pt_file_protein = torch.load(protein_pt)
-
-        if os.path.isfile(os.path.join(self.processed_dir_data, self.pt_file_name)):
-            self.data_processed = torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
+        if os.path.exists(processed_data_pt):
+            self.data_processed = torch.load(processed_data_pt)
         else:
-            os.makedirs(self.processed_dir_data, exist_ok=True)
-            self.data_processed = self.process_data()
+            self.data = df.reset_index(drop=True) 
+            self.processed_dir_data = processed_dir_data
+            self.test = test
+            self.data_name = data_name
+            self.pt_file_name = 'data_{}.pt'.format(self.data_name)
+            self.pt_file_protein = torch.load(protein_pt)
+            if os.path.isfile(os.path.join(self.processed_dir_data, self.pt_file_name)):
+                self.data_processed = torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
+            else:
+                os.makedirs(self.processed_dir_data, exist_ok=True)
+                self.data_processed = self.process_data()
 
     def morgan_fingerprint(self, mol):
         fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius = 2, nBits=2048)

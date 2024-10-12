@@ -9,9 +9,9 @@ from time import ctime
 
 from torch_geometric.loader import DataLoader
 from common.ultils import *
-from dataset_class import CPI3DDataset
+from dataset import CPI3DDataset
 from model import TensorProductModel_one_hot3
-from parsing import parse_train_args
+from common.parsing import parse_train_args
 
 print(f"Torch version: {torch.__version__}")
 print(f"Cuda available: {torch.cuda.is_available()}")

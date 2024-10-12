@@ -3,7 +3,7 @@ from rdkit import Chem
 import numpy as np 
 import os
 from tqdm import tqdm
-
+import sys
 import torch
 import torch_geometric
 from torch_geometric.data import Dataset
@@ -17,23 +17,11 @@ print(f"Torch version: {torch.__version__}")
 print(f"Cuda available: {torch.cuda.is_available()}")
 print(f"Torch geometric version: {torch_geometric.__version__}")
 
-"""
-!!!
-NOTE: This file was replaced by dataset_featurizer.py
-but is kept to illustrate how to build a custom dataset in PyG.
-!!!
-"""
 
-
-
-class CPI3DDataset(Dataset):
+class Gen3Dprteingraph(Dataset):
     def __init__(self, filename, processed_dir_data, pt_file_name, test=False):
-        """
-        root = Where the dataset should be stored. This folder is split
-        into raw_dir (downloaded dataset) and processed_dir (processed data). 
-        """
-        super(CPI3DDataset, self).__init__()
-        # self.dataset_file = filename
+
+        super(Gen3Dprteingraph, self).__init__()
         self.data = pd.read_csv(filename)
         self.processed_dir_data = processed_dir_data
 
@@ -48,10 +36,9 @@ class CPI3DDataset(Dataset):
             self.data_processed = self.process_data()
 
     def process_data(self):
-        
         data_container = {}
-
-        for index, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
+        
+        for _, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
             prot_fold_name = row['receptor'].split('/')[-1].split('.')[0]
             
             def rec_all_features(struct):
@@ -81,16 +68,12 @@ class CPI3DDataset(Dataset):
                 return res_features_f
 
             def read_rec_pdb(pdb_path):
-                chain_alpha = []
                 struct = strucio.load_structure(pdb_path)
                 c_alpha_coords = [list(atom.coord) for atom in struct if atom.atom_name == 'CA']
                 rec_features = rec_all_features(struct)
-                # import pdb
-                # pdb.set_trace()
                 return c_alpha_coords, rec_features
 
             c_alpha_coords, rec_features = read_rec_pdb(row['receptor'])
-            # c_alpha_coords = CA_coords
             num_residues = len(c_alpha_coords)
             if num_residues <= 1:
                 raise ValueError(f"rec contains only 1 residue!")
@@ -116,20 +99,13 @@ class CPI3DDataset(Dataset):
                 dst_list.extend(dst)
 
             assert len(src_list) == len(dst_list)
-            # get_receptor_graph()
             data['receptor_x'] = torch.from_numpy(rec_features)
             data['receptor_pos'] = torch.tensor(np.array(c_alpha_coords)).float()
             data['receptor_edge_index'] = torch.tensor(torch.from_numpy(np.asarray([src_list, dst_list])), dtype=torch.long)        
-            
             data_container.update({prot_fold_name:data})
-            # import pdb
-            # pdb.set_trace()
+
         torch.save(data_container,os.path.join(self.processed_dir_data,self.pt_file_name))
         return torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
-
-    # def _get_labels(self, label):
-    #     label = np.asarray([label])
-    #     return torch.tensor(label, dtype=torch.int64)
 
     def len(self):
         return len(self.data_processed)
@@ -138,8 +114,6 @@ class CPI3DDataset(Dataset):
         """ - Equivalent to __getitem__ in pytorch
             - Is not needed for PyG's InMemoryDataset
         """
-        # import pdb
-        # pdb.set_trace()
         return self.data_processed[idx]
 
 def main(dataset_folder, filename, processed_dir_data, pt_file_name):
@@ -152,31 +126,21 @@ def main(dataset_folder, filename, processed_dir_data, pt_file_name):
     df = pd.DataFrame({'receptor':data_prots})
     df.to_csv(filename)
 
-
-    train_dataset = CPI3DDataset(filename = filename, processed_dir_data = processed_dir_data, pt_file_name = pt_file_name)
-    # train_loader = DataListLoader(train_dataset, batch_size=10, shuffle=True, drop_last=True)
+    Gen3Dprteingraph(filename = filename, processed_dir_data = processed_dir_data, pt_file_name = pt_file_name)
 
 if __name__ == '__main__':
-    dataset_folder = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esm1binddingdb_data'
-    filename = 'data_bindingDB_prot_classification.csv'
-    processed_dir_data = '/ssd1/quang/moldock/e3nn_cpi_project/processed/bindingDB_class_prot'
-    pt_file_name = 'bindingDB_prot_classification.pt'
+    # dataset_folder = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esm1binddingdb_data'
+    # filename = 'data_bindingDB_prot_classification.csv'
+    # processed_dir_data = '/ssd1/quang/moldock/e3nn_cpi_project/processed/bindingDB_class_prot'
+    # pt_file_name = 'bindingDB_prot_classification.pt'
+    # main(dataset_folder, filename, processed_dir_data, pt_file_name)
+
+    # ESM output
+    dataset_folder = str(sys.argv[1])
+    # protein file name
+    filename = str(sys.argv[2])
+    # processed_dir
+    processed_dir_data = str(sys.argv[3])
+    # processed_pt_name
+    pt_file_name = str(sys.argv[4])
     main(dataset_folder, filename, processed_dir_data, pt_file_name)
-
-    # dataset_folder = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esm1dudediverse_data'
-    # filename = 'data_due_prot_classification.csv'
-    # processed_dir_data = '/ssd1/quang/moldock/e3nn_cpi_project/processed/due_class_prot'
-    # pt_file_name = 'dude_prot_classification.pt'
-    # main(dataset_folder, filename, processed_dir_data, pt_file_name)
-
-
-    # '/ssd1/quang/moldock/e3nn_cpi_project/processed/bindingDB_class_prot/bindingDB_prot_classification.pt'
-    # '/ssd1/quang/moldock/e3nn_cpi_project/processed/due_class_prot/dude_prot_classification.pt'
-    
-
-    
-    # dataset_folder = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esmprotein_dict_BindingDB'
-    # filename = 'data_biolip2_prot.csv'
-    # processed_dir_data = '/ssd1/quang/moldock/e3nn_cpi_project/processed/biolip2_prot'
-    # pt_file_name = 'biolip2_prot_max20.pt'
-    # main(dataset_folder, filename, processed_dir_data, pt_file_name)
