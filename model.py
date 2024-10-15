@@ -239,11 +239,7 @@ class TensorProductModel_one_hot3(torch.nn.Module):
         # this assumes the edges were already created in preprocessing since protein's structure is fixed
         edge_index = batch['receptor', 'receptor'].edge_index
         src, dst = edge_index.long()
-        try:
-            edge_vec = batch['receptor'].pos[dst.long()] - batch['receptor'].pos[src.long()]
-        except:
-            import pdb
-            pdb.set_trace()
+        edge_vec = batch['receptor'].pos[dst.long()] - batch['receptor'].pos[src.long()]
         edge_length_emb = self.rec_distance_expansion(edge_vec.norm(dim=-1))
         edge_attr = edge_length_emb
         edge_sh = o3.spherical_harmonics(self.sh_irreps, edge_vec, normalize=True, normalization='component')
@@ -270,8 +266,8 @@ class TensorProductModel_one_hot3(torch.nn.Module):
         edge_sh = o3.spherical_harmonics(self.sh_irreps, edge_vec, normalize=True, normalization='component')
 
         return edge_index, edge_attr, edge_sh
+        
     def forward(self, batch):
-        # print(batch['ligand'].morgan_fingerprint)
         # build ligand graph
         lig_node_attr, lig_edge_index, lig_edge_attr, lig_edge_sh = self.build_lig_conv_graph(batch)
         lig_node_attr = self.lig_node_embedding(lig_node_attr)
@@ -310,7 +306,6 @@ class TensorProductModel_one_hot3(torch.nn.Module):
             lig_node_attr = F.pad(lig_node_attr, (0, lig_intra_update.shape[-1] - lig_node_attr.shape[-1]))
             lig_node_attr = (lig_node_attr + lig_intra_update + lig_inter_update)/3
 
-            # if l != len(self.conv_lig_layers) - 1:
             rec_node_attr = F.pad(rec_node_attr, (0, rec_intra_update.shape[-1] - rec_node_attr.shape[-1]))
             rec_node_attr = (rec_node_attr + rec_intra_update + rec_inter_update)/3
 
