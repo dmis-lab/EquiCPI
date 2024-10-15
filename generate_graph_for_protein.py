@@ -27,8 +27,8 @@ class Gen3Dprteingraph(Dataset):
 
         self.pt_file_name = pt_file_name
         self.feature_size = 200
-        self.cutoff = 20
-        self.max_neighbor=20
+        self.cutoff = 30
+        self.max_neighbor = 20
         if os.path.isfile(os.path.join(self.processed_dir_data, self.pt_file_name)):
             self.data_processed = torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
         else:
