@@ -5,7 +5,7 @@ from common.ultils import *
 from dataset import CPI3DDataset
 import os
 
-def data_making_path(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/ssd1/quang/moldock/DiffDock/results/bindingdb_score_temp/rerank'):
+def data_making_path(data_name= None, dataset_folder = None):
     data_complex_name=[]
     data_comps = []
     data_prots = []
@@ -33,13 +33,13 @@ def data_making_path(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/
     df.to_csv(data_name)
     return data_name
 
-def data_making_path_or_diffdock(data_name= 'bindingdb_diff_rerank.csv', dataset_folder = '/ssd1/quang/moldock/DiffDock/results/bindingdb_score_temp/rerank'):
+def data_making_path_or_diffdock(data_name= None, dataset_folder = None):
     data_complex_name=[]
     data_comps = []
     data_prots = []
     data_labels = []
 
-    or_diff_pre_fold = '/ssd1/quang/moldock/DiffDock/results/bindingdb_score'
+    or_diff_pre_fold = #predictions_diffdock_folder 
 
     for complex_name in tqdm(os.listdir(dataset_folder)):
         complex_dir = os.path.join(dataset_folder,complex_name)
@@ -93,7 +93,7 @@ def main(task, dataset_name, data_name_csv):
         CPI3DDataset(df = pd.read_csv(data_name_csv), 
                         data_name = 'data_bindingDB_train_{}label_encode111'.format(dataset_name), 
                         processed_dir_data = './processed_data/{}diff_classification'.format(dataset_name),
-                        protein_pt = '/ssd1/quang/moldock/e3nn_cpi_project/processed/due_class_prot/dude_prot_classification.pt')
+                        protein_pt = '/dude_prot_classification.pt')
     else:
         df = pd.read_csv(data_name_csv)
         task = 'novel_comp' # novel_prot/ novel_comp/ novel_pair 
@@ -101,9 +101,9 @@ def main(task, dataset_name, data_name_csv):
         for task in tasks:
             for fold in range(5):
 
-                train_csv_path = pd.read_csv('/ssd1/quang/moldock/Benchmark_data/for_equi/for_cpi_task/{}/{}_{}_train.csv'.format(task,task,fold))
-                val_csv_path = pd.read_csv('/ssd1/quang/moldock/Benchmark_data/for_equi/for_cpi_task/{}/{}_{}_val.csv'.format(task,task,fold))
-                test_csv_path = pd.read_csv('/ssd1/quang/moldock/Benchmark_data/for_equi/for_cpi_task/{}/{}_{}_test.csv'.format(task,task,fold))
+                train_csv_path = pd.read_csv('/{}/{}_{}_train.csv'.format(task,task,fold))
+                val_csv_path = pd.read_csv('/{}/{}_{}_val.csv'.format(task,task,fold))
+                test_csv_path = pd.read_csv('/{}/{}_{}_test.csv'.format(task,task,fold))
 
                 df_train = df_for_ex(df, train_csv_path)
                 df_val = df_for_ex(df, val_csv_path)
@@ -111,13 +111,13 @@ def main(task, dataset_name, data_name_csv):
 
                 CPI3DDataset(df = df_train, 
                             data_name = 'data_bindingDB_train_{}{}label_encode'.format(task,fold), 
-                            processed_dir_data = './processed_data/bindingDBdiffrerank')
+                            processed_dir_data = './processed_data/')
                 CPI3DDataset(df = df_val, 
                             data_name = 'data_bindingDB_val_{}{}label_encode'.format(task,fold), 
-                            processed_dir_data = './processed_data/bindingDBdiffrerank')
+                            processed_dir_data = './processed_data/')
                 CPI3DDataset(df = df_test, 
                             data_name = 'data_bindingDB_test_{}{}label_encode'.format(task,fold), 
-                            processed_dir_data = './processed_data/bindingDBdiffrerank')    
+                            processed_dir_data = './processed_data/')    
 
 
 if __name__ == '__main__':
