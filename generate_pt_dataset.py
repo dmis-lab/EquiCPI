@@ -66,7 +66,7 @@ def data_making_path_or_diffdock(data_name= None, dataset_folder = None):
     return data_name
 
 def data_making_path_or_diffdock_classification(data_name, dataset_folder):
-    csv_dataset = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esmDUDEdiverse_data.csv'
+    csv_dataset = #Datasets.csv
     df_csv_dataset = pd.read_csv(csv_dataset)
     data_complex_name=[]
     data_comps = []
