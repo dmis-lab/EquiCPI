@@ -10,13 +10,17 @@ Here we used the predicted 3D structure of compounds by adopting [Diffdock](http
 
 **Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
 ~~~
-python generate_graph_for_protein.py  
+python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #processed_dir #name_of_file.pt
+~~~
+**Re_ranking the complexes with Vina_docking score**<br />
+~~~
+python ./vina_score/vina_function_rerank_regu.py #prediction_output_diffdock #dataset.csv(with compound.sdf, protein.pdb)
 ~~~
 **Run generate data for turning compounds and proteins into 3D graphs.** <br /> 
 ~~~
-python generate_pt_dataset.py 
+python generate_pt_dataset.py #machine_learning_task #data_name #data_csv_file.csv
 ~~~
 Run training the model. <br /> 
 ~~~
-CUDA_VISIBLE_DEVICES=4,5,6,7 train.py 
+bash run_class.sh
 ~~~
