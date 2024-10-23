@@ -8,7 +8,7 @@ def parse_train_args():
     parser.add_argument('--task', type=str, default=None)
     parser.add_argument('--result_name', type=str, default=None)
     parser.add_argument('--task_ml', type=str, default='classification')
-    parser.add_argument('--snapshot_path', type=str, default='./abc.pt',help='checkpoint')
+    parser.add_argument('--snapshot_path', type=str, default='./bestmodel.pt',help='checkpoint')
     parser.add_argument('--eva_epochs', type=int, default=2, help='Eval model every eva_epochs')
 
     # # Training arguments
@@ -33,6 +33,6 @@ def parse_train_args():
     parser.add_argument('--cross_max_distance', type=float, default=80, help='Maximum cross distance in case not dynamic')
     parser.add_argument('--dropout', type=float, default=0.9, help='MLP dropout')
     parser.add_argument('--morgan_net',type=str , default='2048,512,256', help='ECFP network')
-    parser.add_argument('--interaction_net',type=str , default='256,256,256', help='ECFP network')
+    parser.add_argument('--interaction_net',type=str , default='256,256,256', help='interaction network')
     args = parser.parse_args()
     return args
