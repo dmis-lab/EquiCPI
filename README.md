@@ -6,11 +6,21 @@ A PyTorch implementation of:
 In this project, we proposed a model to fully use SE(3) group (Euclidian group) by using multiple e3nn neural networks to predict the binding affinity free energy. These networks leverage the principles of equivariance and invariance to process 3D structures, ensuring that the extracted information remains consistent regardless of transformations such as rotations, translations, and reflections.
 Here we used the predicted 3D structure of compounds by adopting [Diffdock](https://github.com/gcorso/DiffDock) and the predicted 3D fold of protein sequence by using [ESMFold](https://github.com/facebookresearch/esm).
 
+Traditional sequence-based models for compound-protein interaction (CPI) prediction often  rely on molecular fingerprints, descriptors, or graph representations. These approaches tend to overlook  the significant information of three-dimensional (3D) structures. To address this limitation, we developed  a novel model, EquiCPI, based on Euclidean neural networks (e3nns), which leverage the SE(3)  (Euclidean group) group to predict binding affinity. The model leverages principles of equivariance and  invariance, enabling it to extract 3D information while maintaining consistency across transformations such as rotations, translations, and reflections. We utilized predicted 3D structures from sequence data of compounds from state-of-the-art DiffDock and 3D protein folds from ESMFold to train and validate the proposed model.
 
 ![model_arch](https://github.com/user-attachments/assets/8ab233e5-d264-4bdf-b4a2-b3fa5a584c24)
 
+Set up the environment:
 
-**Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
+In our experiment we use, Python 3.9 with PyTorch 2.1.2 + CUDA 11.8.
+
+```bash
+git clone https://github.com/dmis-lab/EquiCPI.git
+conda env create -f environment.yml
+```
+
+
+# 1 **Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
 ~~~
 python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #processed_dir #name_of_file.pt
 ~~~
