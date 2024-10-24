@@ -22,8 +22,14 @@ python ./vina_score/vina_function_rerank_regu.py #prediction_output_diffdock #da
 ~~~
 python generate_pt_dataset.py #machine_learning_task #data_name #data_csv_file.csv
 ~~~
-Run training the model. <br /> 
+**Run training the model.** <br /> 
 ~~~
 bash run_class.sh
 ~~~
+
+** Datasets ** <br /> 
+The related Datasets are as follows: <br /> 
+[BindingDB curated from articles](https://www.bindingdb.org/rwd/bind/chemsearch/marvin/Download.jsp): https://www.bindingdb.org/rwd/bind/chemsearch/marvin/Download.jsp <br /> 
+[DUD-E Diverse](http://dude.docking.org/subsets/diverse): http://dude.docking.org/subsets/diverse <br /> 
+[BindingDB_class](https://github.com/IBM/InterpretableDTIP): https://github.com/IBM/InterpretableDTIP <br /> 
 
