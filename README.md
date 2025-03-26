@@ -1,12 +1,12 @@
 # EquiCPI
 
 A PyTorch implementation of:
-**EquiCPI: A equivariant neural network for compound protein interaction prediction**
+**EquiCPI: SE(3)-Equivariant Geometric Deep Learning for Structure-Aware Prediction of Compound-Protein Interactions**
 
 In this project, we proposed a model to fully use SE(3) group (Euclidian group) by using multiple e3nn neural networks to predict the binding affinity free energy. These networks leverage the principles of equivariance and invariance to process 3D structures, ensuring that the extracted information remains consistent regardless of transformations such as rotations, translations, and reflections.
-Here we used the predicted 3D structure of compounds by adopting [Diffdock](https://github.com/gcorso/DiffDock) and the predicted 3D fold of protein sequence by using [ESMFold](https://github.com/facebookresearch/esm).
+Here we used the predicted 3D structure of compounds by adopting [Diffdock-L](https://github.com/gcorso/DiffDock) and the predicted 3D fold of protein sequence by using [ESMFold](https://github.com/facebookresearch/esm).
 
-Traditional sequence-based models for compound-protein interaction (CPI) prediction often  rely on molecular fingerprints, descriptors, or graph representations. These approaches tend to overlook  the significant information of three-dimensional (3D) structures. To address this limitation, we developed  a novel model, EquiCPI, based on Euclidean neural networks (e3nns), which leverage the SE(3)  (Euclidean group) group to predict binding affinity. The model leverages principles of equivariance and  invariance, enabling it to extract 3D information while maintaining consistency across transformations such as rotations, translations, and reflections. We utilized predicted 3D structures from sequence data of compounds from state-of-the-art DiffDock and 3D protein folds from ESMFold to train and validate the proposed model.
+Traditional sequence-based models for compound-protein interaction (CPI) prediction often  rely on molecular fingerprints, descriptors, or graph representations. These approaches tend to overlook  the significant information of three-dimensional (3D) structures. To address this limitation, we developed  a novel model, EquiCPI, based on Euclidean neural networks (e3nns), which leverage the SE(3)  (Euclidean group) group to predict binding affinity. The model leverages principles of equivariance and  invariance, enabling it to extract 3D information while maintaining consistency across transformations such as rotations, translations, and reflections. We utilized predicted 3D structures from sequence data of compounds from state-of-the-art DiffDock-L and 3D protein folds from ESMFold to train and validate the proposed model.
 
 ![model_arch](https://github.com/user-attachments/assets/8ab233e5-d264-4bdf-b4a2-b3fa5a584c24)
 
