@@ -21,18 +21,23 @@ conda env create -f environment.yml
 
 
 # 1 **Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
+To generate a .pt file containing a 3D graph representation of a protein, run:
 ~~~
 python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #processed_dir #name_of_file.pt
 ~~~
 **Re_ranking the complexes with Vina_docking score**<br />
+To re-rank predicted complexes based on Vina docking scores, execute:
 ~~~
 python ./vina_score/vina_function_rerank_regu.py #prediction_output_diffdock #dataset.csv(with compound.sdf, protein.pdb)
 ~~~
+Ensure that dataset.csv contains compound.sdf and protein.pdb files.
 **Run generate data for turning compounds and proteins into 3D graphs.** <br /> 
+To convert compounds and proteins into 3D graph representations, run:
 ~~~
 python generate_pt_dataset.py #machine_learning_task #data_name #data_csv_file.csv
 ~~~
 **Run training the model.** <br /> 
+To start model training, execute:
 ~~~
 bash run_class.sh
 ~~~
