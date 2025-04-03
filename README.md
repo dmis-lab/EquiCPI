@@ -43,3 +43,7 @@ The related Datasets are as follows: <br />
 [DUD-E Diverse](http://dude.docking.org/subsets/diverse): http://dude.docking.org/subsets/diverse <br /> 
 [BindingDB_class](https://github.com/IBM/InterpretableDTIP): https://github.com/IBM/InterpretableDTIP <br /> 
 
+EquiDPI builds upon the source code and data from the following projects:
+[DiffDock-L](https://github.com/gcorso/DiffDock): Deep Confident Steps to New Pockets: Strategies for Docking Generalization <br /> 
+[ESMFold](https://github.com/facebookresearch/esm): Evolutionary-scale prediction of atomic-level protein structure with a language model <br /> 
+We thank all their contributors and maintainers!
