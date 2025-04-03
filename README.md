@@ -52,8 +52,7 @@ EquiDPI builds upon the source code and data from the following projects: <br />
 [DiffDock-L](https://github.com/gcorso/DiffDock): Deep Confident Steps to New Pockets: Strategies for Docking Generalization <br /> 
 [ESMFold](https://github.com/facebookresearch/esm): Evolutionary-scale prediction of atomic-level protein structure with a language model <br /> 
 [AutoDock-Vina](https://github.com/ccsb-scripps/AutoDock-Vina): AutoDock Vina 1.2.0: New Docking Methods, Expanded Force Field, and Python Bindings <br /> 
+
 **License** <br /> 
 This repository follows the license terms of the original EquiCPI project. Refer to LICENSE for details.
-
-
 We thank all their contributors and maintainers!
