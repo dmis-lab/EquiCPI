@@ -27,7 +27,8 @@ python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #process
 ~~~
 **Re_ranking the complexes with Vina_docking score**<br />
 
-[3D_encode.pdf](https://github.com/user-attachments/files/19600008/3D_encode.pdf)
+![image](https://github.com/user-attachments/assets/96acf826-36ab-4b1b-9a2f-3426c389f006)
+
 Our workflow starts by utilizing SMILES strings to represent the chemical structures of various compounds and amino acid sequences to define protein structures. These inputs are then processed through DiffDock-L and ESMFold, two advanced computational tools that predict the three-dimensional (3D) conformations of small molecules and proteins, respectively.
 
 Once the 3D structures are generated, we proceed to docking simulations to assess potential interactions between the compounds and target proteins. Specifically, we employ AutoDock Vina, a widely used molecular docking software, to predict binding affinities and identify optimal docking poses. Among the generated poses, we systematically evaluate and select the most favorable binding conformation based on the AutoDock Vina score, ensuring that the predicted interaction is both energetically stable and biologically relevant.
