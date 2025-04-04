@@ -26,8 +26,7 @@ To generate a .pt file containing a 3D graph representation of a protein, run:
 python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #processed_dir #name_of_file.pt
 ~~~
 **Re_ranking the complexes with Vina_docking score**<br />
-
-![image](https://github.com/user-attachments/assets/96acf826-36ab-4b1b-9a2f-3426c389f006)
+![image](https://github.com/user-attachments/assets/c32a437d-01c3-4e88-a83b-716d2150b5f8)
 
 Our workflow starts by utilizing SMILES strings to represent the chemical structures of various compounds and amino acid sequences to define protein structures. These inputs are then processed through DiffDock-L and ESMFold, two advanced computational tools that predict the three-dimensional (3D) conformations of small molecules and proteins, respectively.
 
