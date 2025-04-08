@@ -20,7 +20,7 @@ conda env create -f environment.yml
 ```
 
 
-# 1 **Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
+ **Generate a .pt file containing a 3D graph of a protein from a .pdb input file.**<br />
 To generate a .pt file containing a 3D graph representation of a protein, run:
 ~~~
 python generate_graph_for_protein.py #output_ESM #file_protein_name.csv #processed_dir #name_of_file.pt
@@ -63,3 +63,17 @@ EquiDPI builds upon the source code and data from the following projects: <br />
 **License** <br /> 
 This repository follows the license terms of the original EquiCPI project. Refer to LICENSE for details.
 We thank all their contributors and maintainers!
+
+**Citing this work**
+If you use the code or data associated with this package or otherwise find this work useful, please cite:
+~~~
+@misc{nguyen2025equicpise3equivariantgeometricdeep,
+      title={EquiCPI: SE(3)-Equivariant Geometric Deep Learning for Structure-Aware Prediction of Compound-Protein Interactions}, 
+      author={Ngoc-Quang Nguyen},
+      year={2025},
+      eprint={2504.04654},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2504.04654}, 
+}
+~~~
