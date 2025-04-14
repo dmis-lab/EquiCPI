@@ -88,7 +88,8 @@ We sincerely appreciate all contributors and maintainers for their efforts! 🙌
 ---
 
 ## 📜 License
-This repository follows the license terms of the **EquiCPI project**. See the [LICENSE](LICENSE) file for details.
+This repository follows the license terms of the **EquiCPI project**. ## License
+[MIT](https://choosealicense.com/licenses/mit/).
 
 ---
 
