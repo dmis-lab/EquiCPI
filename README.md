@@ -97,12 +97,11 @@ This repository follows the license terms of the **EquiCPI project**. ## License
 | Task | Status       | Notes                                             |
 |------|--------------|---------------------------------------------------|
 | Improve CLI usability                  | 🔧 In Progress | Add YAML/argparse defaults                      |
-| Add structured W&B logging             | ✅ Done         | Already integrated                              |
+| Add structured W&B logging             | ✅ Done        | Already integrated                              |
 | Clean folder structure                 | 🔧 In Progress | Organize into `scripts/`, `models/`, `data/`    |
 | Add Jupyter notebooks                  | ❌ Not Started | Demo for training, testing, visualizing graphs  |
-| Add unit tests                         | ❌ Not Started | Focus on dataset + encoder modules              |
-| Dataset downloader & prep script       | ❌ Not Started | Automate BDB, DUD-E download                    |
 | Detailed API documentation             | ❌ Not Started | Add docstrings + auto doc                       |
+| How to train your dataset              | ❌ Not Started | supporting custom datasets                      |
 
 ---
 ## 📖 Citation
