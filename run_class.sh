@@ -1,7 +1,23 @@
-#!/bin/bash 
-echo "Please enter the GPU address"
-read GPU
+#!/bin/bash
+
+# Prompt user for GPU selection
+read -p "Enter the GPU ID to use: " GPU
 echo "Selected GPU: $GPU"
 
-#train
-CUDA_VISIBLE_DEVICES=$GPU python train.py --model_name model9 --batch_size 75 --n_epochs 30 --task novel_comp --dropout 0.9 --result_name model9_classifcation_mean_aggdrop
+# Define training parameters
+MODEL_NAME="model9"
+BATCH_SIZE=75
+EPOCHS=30
+TASK="novel_comp"
+DROPOUT=0.9
+RESULT_NAME="${MODEL_NAME}_classification_mean_aggdrop"
+
+# Run training
+echo "Starting training with model: $MODEL_NAME"
+CUDA_VISIBLE_DEVICES="$GPU" python train.py \
+  --model_name "$MODEL_NAME" \
+  --batch_size "$BATCH_SIZE" \
+  --n_epochs "$EPOCHS" \
+  --task "$TASK" \
+  --dropout "$DROPOUT" \
+  --result_name "$RESULT_NAME"

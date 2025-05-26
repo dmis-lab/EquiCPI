@@ -1,146 +1,136 @@
-import pandas as pd
-from rdkit import Chem
-import numpy as np 
 import os
-from tqdm import tqdm
 import sys
+import numpy as np
+import pandas as pd
 import torch
-import torch_geometric
+from tqdm import tqdm
+from rdkit import Chem
 from torch_geometric.data import Dataset
 from common.get_infor_sdf import rec_atom_featurizer
-
 import biotite.structure.io as strucio
-
 import scipy.spatial as spa
 
-print(f"Torch version: {torch.__version__}")
-print(f"Cuda available: {torch.cuda.is_available()}")
-print(f"Torch geometric version: {torch_geometric.__version__}")
 
-
-class Gen3Dprteingraph(Dataset):
-    def __init__(self, filename, processed_dir_data, pt_file_name, test=False):
-
-        super(Gen3Dprteingraph, self).__init__()
+class Gen3DProteinGraph(Dataset):
+    def __init__(self, filename, processed_dir, pt_filename, cutoff=30, max_neighbors=20, feature_size=200):
+        super().__init__()
         self.data = pd.read_csv(filename)
-        self.processed_dir_data = processed_dir_data
+        self.processed_dir = processed_dir
+        self.pt_filename = pt_filename
+        self.cutoff = cutoff
+        self.max_neighbors = max_neighbors
+        self.feature_size = feature_size
+        self.residue_names = [
+            'ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLN', 'GLU', 'GLY', 'HIS',
+            'ILE', 'LEU', 'LYS', 'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP',
+            'TYR', 'VAL'
+        ]
+        self.atom_names = [
+            'C', 'CA', 'CB', 'CD', 'CD1', 'CD2', 'CE', 'CE1', 'CE2', 'CE3', 'CG',
+            'CG1', 'CG2', 'CH2', 'CZ', 'CZ2', 'CZ3', 'N', 'ND1', 'ND2', 'NE',
+            'NE1', 'NE2', 'NH1', 'NH2', 'NZ', 'O', 'OD1', 'OD2', 'OE1', 'OE2',
+            'OG', 'OG1', 'OH', 'SD', 'SG'
+        ]
 
-        self.pt_file_name = pt_file_name
-        self.feature_size = 200
-        self.cutoff = 30
-        self.max_neighbor = 20
-        if os.path.isfile(os.path.join(self.processed_dir_data, self.pt_file_name)):
-            self.data_processed = torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
+        os.makedirs(self.processed_dir, exist_ok=True)
+        pt_path = os.path.join(self.processed_dir, self.pt_filename)
+        if os.path.isfile(pt_path):
+            self.data_processed = torch.load(pt_path)
         else:
-            os.makedirs(self.processed_dir_data, exist_ok=True)
             self.data_processed = self.process_data()
+            torch.save(self.data_processed, pt_path)
+
+    def read_structure(self, pdb_path):
+        return strucio.load_structure(pdb_path)
+
+    def extract_features(self, struct):
+        feature_res = {}
+        res_ids = set(struct.res_id)
+
+        for res_id in tqdm(res_ids, desc="Processing residues"):
+            res_feat = []
+            for atom in struct:
+                if atom.res_id == res_id:
+                    try:
+                        res_index = self.residue_names.index(atom.res_name)
+                        atom_index = self.atom_names.index(atom.atom_name)
+                        element = Chem.MolFromSmiles(atom.element)
+                        element_feat = rec_atom_featurizer(element.GetAtoms()[0]) if element else [0] * (self.feature_size - 2)
+                        res_feat.append(atom_index)
+                        res_feat.extend(element_feat)
+                    except Exception as e:
+                        print(f"Warning: Failed to extract features for atom: {e}")
+                        continue
+
+            if res_feat:
+                full_feat = [res_index] + res_feat
+                full_feat = full_feat[:self.feature_size] + [0] * (self.feature_size - len(full_feat))
+                feature_res[res_id] = full_feat
+
+        return np.array(list(feature_res.values()))
+
+    def compute_knn_edges(self, coords):
+        distances = spa.distance.cdist(coords, coords)
+        src, dst = [], []
+
+        for i in range(len(coords)):
+            neighbors = list(np.where(distances[i] < self.cutoff)[0])
+            if i in neighbors:
+                neighbors.remove(i)
+
+            if not neighbors:
+                neighbors = list(np.argsort(distances[i]))[1:2]
+
+            if self.max_neighbors and len(neighbors) > self.max_neighbors:
+                neighbors = list(np.argsort(distances[i]))[1: self.max_neighbors + 1]
+
+            src.extend([i] * len(neighbors))
+            dst.extend(neighbors)
+
+        return np.array([src, dst], dtype=np.int64)
 
     def process_data(self):
-        data_container = {}
-        
-        for _, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
-            prot_fold_name = row['receptor'].split('/')[-1].split('.')[0]
-            
-            def rec_all_features(struct):
-                #residue
-                res_ids = set(struct.res_id)
-                feature_res = {}
-                res_names = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLN', 'GLU', 'GLY', 'HIS', 'ILE', 'LEU', 'LYS', 'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP', 'TYR', 'VAL'] 
-                atom_names = ['C', 'CA', 'CB', 'CD', 'CD1', 'CD2', 'CE', 'CE1', 'CE2', 'CE3', 'CG', 'CG1', 'CG2', 'CH2', 'CZ', 'CZ2', 'CZ3', 'N', 'ND1', 'ND2', 'NE', 'NE1', 'NE2', 'NH1', 'NH2', 'NZ', 'O', 'OD1', 'OD2', 'OE1', 'OE2', 'OG', 'OG1', 'OH', 'SD', 'SG']
-                for res_id in tqdm(res_ids):
-                    res_features = []
-                    dummy_array = [0]*self.feature_size
-                    for res in struct:
-                        if res.res_id == res_id:
-                            resnames_tensor = res_names.index(res.res_name)
-                            #atom
-                            rec_feature1 = atom_names.index(res.atom_name)
-                            # rec_feature1= F.one_hot(atomnames_tensor, num_classes = len(atom_names))
-                            res_features.append(rec_feature1)
-                            #element
-                            rec_feature2 = rec_atom_featurizer(Chem.MolFromSmiles(res.element).GetAtoms()[0])
-                            res_features.extend(rec_feature2)
-                    res_features.insert(0, resnames_tensor)
-                    res_features.extend(dummy_array)
-                    feature_res[res_id] = res_features[:self.feature_size]
-                res_features_f = np.array(list(feature_res.values()))
-                
-                return res_features_f
+        container = {}
 
-            def read_rec_pdb(pdb_path):
-                struct = strucio.load_structure(pdb_path)
-                c_alpha_coords = [list(atom.coord) for atom in struct if atom.atom_name == 'CA']
-                rec_features = rec_all_features(struct)
-                return c_alpha_coords, rec_features
+        for _, row in tqdm(self.data.iterrows(), total=self.data.shape[0], desc="Processing proteins"):
+            prot_name = os.path.splitext(os.path.basename(row['receptor']))[0]
+            struct = self.read_structure(row['receptor'])
+            coords = [atom.coord for atom in struct if atom.atom_name == 'CA']
 
-            c_alpha_coords, rec_features = read_rec_pdb(row['receptor'])
-            num_residues = len(c_alpha_coords)
-            if num_residues <= 1:
-                raise ValueError(f"rec contains only 1 residue!")
+            if len(coords) <= 1:
+                print(f"Skipping {prot_name}: only 1 residue")
+                continue
 
-            # Build the k-NN graph
-            distances = spa.distance.cdist(c_alpha_coords, c_alpha_coords)
-            src_list = []
-            dst_list = []
-            mean_norm_list = []
-            data = {}
-            for i in range(num_residues):
-                dst = list(np.where(distances[i, :] < self.cutoff)[0])
-                dst.remove(i)
-                if self.max_neighbor != None and len(dst) > self.max_neighbor:
-                    dst = list(np.argsort(distances[i, :]))[1: self.max_neighbor + 1]
-                if len(dst) == 0:
-                    dst = list(np.argsort(distances[i, :]))[1:2]  # choose second because first is i itself
-                    print(f'The c_alpha_cutoff {self.cutoff} was too small for one c_alpha such that it had no neighbors. '
-                          f'So we connected it to the closest other c_alpha')
-                assert i not in dst
-                src = [i] * len(dst)
-                src_list.extend(src)
-                dst_list.extend(dst)
+            features = self.extract_features(struct)
+            edge_index = self.compute_knn_edges(coords)
 
-            assert len(src_list) == len(dst_list)
-            data['receptor_x'] = torch.from_numpy(rec_features)
-            data['receptor_pos'] = torch.tensor(np.array(c_alpha_coords)).float()
-            data['receptor_edge_index'] = torch.tensor(torch.from_numpy(np.asarray([src_list, dst_list])), dtype=torch.long)        
-            data_container.update({prot_fold_name:data})
+            graph = {
+                'receptor_x': torch.tensor(features, dtype=torch.float),
+                'receptor_pos': torch.tensor(coords, dtype=torch.float),
+                'receptor_edge_index': torch.tensor(edge_index, dtype=torch.long)
+            }
 
-        torch.save(data_container,os.path.join(self.processed_dir_data,self.pt_file_name))
-        return torch.load(os.path.join(self.processed_dir_data, self.pt_file_name))
+            container[prot_name] = graph
+
+        return container
 
     def len(self):
         return len(self.data_processed)
 
     def get(self, idx):
-        """ - Equivalent to __getitem__ in pytorch
-            - Is not needed for PyG's InMemoryDataset
-        """
-        return self.data_processed[idx]
+        return self.data_processed[list(self.data_processed.keys())[idx]]
 
-def main(dataset_folder, filename, processed_dir_data, pt_file_name):
-    data_prots = []
 
-    for prot_name in tqdm(os.listdir(dataset_folder)):
-        if prot_name.endswith('.pdb'):
-            data_prots.append(os.path.join(dataset_folder,prot_name))
+def main(dataset_folder, csv_path, processed_dir, pt_filename):
+    pdb_files = [os.path.join(dataset_folder, f) for f in os.listdir(dataset_folder) if f.endswith('.pdb')]
+    df = pd.DataFrame({'receptor': pdb_files})
+    df.to_csv(csv_path, index=False)
+    Gen3DProteinGraph(filename=csv_path, processed_dir=processed_dir, pt_filename=pt_filename)
 
-    df = pd.DataFrame({'receptor':data_prots})
-    df.to_csv(filename)
-
-    Gen3Dprteingraph(filename = filename, processed_dir_data = processed_dir_data, pt_file_name = pt_file_name)
 
 if __name__ == '__main__':
-    # dataset_folder = '/ssd1/quang/moldock/Benchmark_data/for_equi/esm/esm1binddingdb_data'
-    # filename = 'data_bindingDB_prot_classification.csv'
-    # processed_dir_data = '/ssd1/quang/moldock/e3nn_cpi_project/processed/bindingDB_class_prot'
-    # pt_file_name = 'bindingDB_prot_classification.pt'
-    # main(dataset_folder, filename, processed_dir_data, pt_file_name)
-
-    # ESM output
     dataset_folder = str(sys.argv[1])
-    # protein file name
-    filename = str(sys.argv[2])
-    # processed_dir
-    processed_dir_data = str(sys.argv[3])
-    # processed_pt_name
-    pt_file_name = str(sys.argv[4])
-    main(dataset_folder, filename, processed_dir_data, pt_file_name)
+    csv_path = str(sys.argv[2])
+    processed_dir = str(sys.argv[3])
+    pt_filename = str(sys.argv[4])
+    main(dataset_folder, csv_path, processed_dir, pt_filename)
