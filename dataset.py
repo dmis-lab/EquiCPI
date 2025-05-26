@@ -36,6 +36,13 @@ class CPI3DDataset(Dataset):
         morgan_feature = np.zeros((1,))
         DataStructs.ConvertToNumpyArray(fp, morgan_feature)
         return morgan_feature
+    
+    def apply_noise(self, tensor, std):
+        if std is None or std == 0.0:
+            return tensor
+        noise = torch.randn_like(tensor) * std
+        return tensor + noise
+
 
     def process_data(self):
         
@@ -49,7 +56,7 @@ class CPI3DDataset(Dataset):
                 lig_coords, node_feats, edge_index, edge_feats = get_ligand_graph(mol_obj, type_encode='label_encoding') 
                 data = HeteroData()
 
-                data['ligand'].pos = torch.tensor(np.array(lig_coords.numpy()))
+                data['ligand'].pos = self.apply_noise(torch.tensor(np.array(lig_coords.numpy())), self.noise)
                 data['ligand'].x = node_feats
                 data['ligand', 'lig_bond', 'ligand'].edge_index = edge_index
                 data['ligand', 'lig_bond', 'ligand'].edge_attr = edge_feats
