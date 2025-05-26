@@ -92,7 +92,19 @@ This repository follows the license terms of the **EquiCPI project**. ## License
 [MIT](https://choosealicense.com/licenses/mit/).
 
 ---
+## ✅ TO DO
 
+| Task | Status       | Notes                                             |
+|------|--------------|---------------------------------------------------|
+| Improve CLI usability                  | 🔧 In Progress | Add YAML/argparse defaults                      |
+| Add structured W&B logging             | ✅ Done         | Already integrated                              |
+| Clean folder structure                 | 🔧 In Progress | Organize into `scripts/`, `models/`, `data/`    |
+| Add Jupyter notebooks                  | ❌ Not Started | Demo for training, testing, visualizing graphs  |
+| Add unit tests                         | ❌ Not Started | Focus on dataset + encoder modules              |
+| Dataset downloader & prep script       | ❌ Not Started | Automate BDB, DUD-E download                    |
+| Detailed API documentation             | ❌ Not Started | Add docstrings + auto doc                       |
+
+---
 ## 📖 Citation
 If you use this code or dataset in your research, please cite:
 ```bibtex
