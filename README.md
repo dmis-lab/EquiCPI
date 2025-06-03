@@ -96,9 +96,9 @@ This repository follows the license terms of the **EquiCPI project**. ## License
 
 | Task | Status       | Notes                                             |
 |------|--------------|---------------------------------------------------|
-| Improve CLI usability                  | 🔧 In Progress | Add YAML/argparse defaults                      |
+| Improve CLI usability                  | ✅ Done | Add YAML/argparse defaults                      |
 | Add structured W&B logging             | ✅ Done        | Already integrated                              |
-| Clean folder structure                 | 🔧 In Progress | Organize into `scripts/`, `models/`, `data/`    |
+| Clean folder structure                 | ✅ Done | Organize into `scripts/`, `models/`, `data/`    |
 | Add Jupyter notebooks                  | 🔧 In Progress | Demo for training, testing, visualizing graphs  |
 | Detailed API documentation             | 🔧 In Progress | Add docstrings + auto doc                       |
 | How to train your dataset              | 🔧 In Progress | supporting custom datasets                      |
