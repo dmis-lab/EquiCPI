@@ -95,13 +95,11 @@ This repository follows the license terms of the **EquiCPI project**. ## License
 ## 📖 Citation
 If you use this code or dataset in your research, please cite:
 ```bibtex
-@misc{nguyen2025equicpise3equivariantgeometricdeep,
-      title={EquiCPI: SE(3)-Equivariant Geometric Deep Learning for Structure-Aware Prediction of Compound-Protein Interactions},
-      author={Ngoc-Quang Nguyen},
-      year={2025},
-      eprint={2504.04654},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2504.04654},
+@article{nguyen2025equicpi,
+  title={EquiCPI: SE (3)-Equivariant Geometric Deep Learning for Structure-Aware Prediction of Compound-Protein Interactions},
+  author={Nguyen, Ngoc-Quang and Kang, Jaewoo},
+  journal={Journal of Chemical Information and Modeling},
+  year={2025},
+  publisher={ACS Publications}
 }
 ```
